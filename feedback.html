@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback</title>
+    <style>
+        body{
+            background:linear-gradient(to bottom,black,rgb(0, 0, 0, 0.696));
+            background-repeat: no-repeat;
+            min-height: 100vh; min-width: 100vw;
+            color:white;
+            font-family:Arial;
+        }
+        #formdiv{
+            display:flex;
+            background-color:rgba(0,0,0,0.6);
+            width:fit-content;
+            padding:15px;
+            border-radius:15px;
+            margin-left:35vw;
+            margin: 10 auto;
+            border: 2px solid white;
+        }
+        body input{
+            border-radius:15px;
+            padding:5px;
+            margin-left: 10px;
+            transition: 0.4s;
+        }
+        input:hover{
+            transform:scale(1.1);
+        }
+        body textarea{
+            height: 5rem; width: 19rem;
+            border-radius:15px;
+            transition: 0.4s;
+        }
+        textarea:hover{
+            transform:scale(1.05);
+        }
+        body button{
+            border-radius: 15px;
+            padding:5px;
+            width: 35%;
+            transition:0.4s;
+        }
+        button:hover{
+            transform:scale(1.1)
+        }
+    </style>
+</head>
+<body>
+    <div id="formdiv">
+        <form action="https://formspree.io/f/mnjgkyoq" method="POST" enctype="multipart/form-data">
+            <h2>Feedback:</h2>
+            Name:
+            <input type="text" name="username" required><br>
+            Gmail:
+            <input type="email" name="email"><br>
+            <h4>Rate:</h4>
+            <input type="radio" value="1star" name="rate">
+            <input type="radio" value="2star" name="rate">
+            <input type="radio" value="3star" name="rate">
+            <input type="radio" value="4star" name="rate">
+            <input type="radio" value="5star" name="rate" required>
+            <h4>Suggestions:</h4>
+            <textarea name="message"></textarea>
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

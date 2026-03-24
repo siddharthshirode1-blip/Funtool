@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morse_code</title>
+    <style>
+        html body{
+            background:linear-gradient(to bottom,black,rgb(0, 0, 0, 0.696));
+            background-repeat: no-repeat;
+            color: white;
+            min-height:100vh; min-width:100vw;
+        }
+
+        #title{
+            text-align:center;
+            display:block;
+        }
+        textarea{
+            height:100px; width:80%;
+            border-radius:15px;
+            padding:5px;
+            margin: 1.6rem; margin-left: 10%;
+            border-color:black;
+        }
+        button{
+            border-radius:10px;
+            padding:1.1em;
+            transition:0.4s;
+        }
+        button:hover{
+            transform: scale(1.1);
+            color:black
+        }
+        button:active{
+            background-color:rgba(255, 255, 255, 0.495);
+        }
+        footer{
+            display:flex;
+            justify-content:flex-end;
+            position:absolute;
+            bottom:0; right:0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Morse_Code</h1>
+        <p>To Learn: <a href="#" style="color:white;">ClickHere</a></p>
+        <h1 id="title">Convertor</h1>
+    </header>
+    <main>
+        <textarea id="input" placeholder="Enter text or Morsecode..."></textarea><br>
+        <center>
+            <button onclick="Text_Morse()">Text → Morse</button> 
+            <button onclick="Morse_Text()">Morse → Text</button><br>
+        </center>
+        <textarea id="output" placeholder="Result..."></textarea>
+    </main>
+    <footer>
+        <p>Project = #01MCC2-6</p>
+    </footer>
+    <script>
+        const AlphaMorse = {
+            A: ".-", B: "-...", C: "-.-.", D: "-..", E: ".",
+            F: "..-.", G: "--.", H: "....", I: "..", J: ".---",
+            K: "-.-", L: ".-..", M: "--", N: "-.", O: "---",
+            P: ".--.", Q: "--.-", R: ".-.", S: "...", T: "-",
+            U: "..-", V: "...-", W: ".--", X: "-..-", Y: "-.--",
+            Z: "--..",
+            0: "-----", 1: ".----", 2: "..---", 3: "...--",
+            4: "....-", 5: ".....", 6: "-....", 7: "--...",
+            8: "---..", 9: "----.",
+            " ": "/"
+        };
+        
+        const MorseAplha = {};
+        for(let lol in AlphaMorse){
+            MorseAplha[AlphaMorse[lol]] = lol;
+        }
+
+        function Text_Morse(){
+            let input = document.getElementById("input").value.toUpperCase();
+            let output = "";
+            for(let c of input){
+                output += (AlphaMorse[c] || "") + " ";
+            }
+            document.getElementById("output").value = output;
+        }
+
+        function Morse_Text(){
+            let input = document.getElementById("input").value.trim().split(" ");
+            let output = "";
+            for(let m of input){
+                output += (MorseAplha[m] || "");
+            }
+            document.getElementById("output").value = output.toLowerCase();
+        }
+    </script>
+</body>
+</html>

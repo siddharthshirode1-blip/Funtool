@@ -1,0 +1,196 @@
+*{
+  padding:0;
+  margin:0;
+}
+
+body{
+  background-size:100% 50%;
+  background-repeat: no-repeat;
+  /* background-color:rgb(8, 5, 48); */
+  background:linear-gradient(to bottom,black,rgba(0, 0, 0, 0.696));
+  color:white;
+}
+
+/* ==================== Headling ==================== */
+
+header h1{
+  font-size:5rem;
+  margin-top:5vh; margin-left: 5vw;
+
+}
+header p{
+  margin-left: 10vw;
+}
+header #about{
+  /* position: absolute;
+  right: 5%;
+  bottom:70%; */
+  color:whitesmoke;
+}
+header #feedback{
+  /* position:absolute;
+  right:5%; */
+  color:whitesmoke;
+}
+#tagname{
+  font-size:larger;
+  height:10vh; width:100%;
+  background:linear-gradient(to bottom right,cornflowerblue,darkblue);
+  color:white;
+  text-shadow:10px 5px 5px black;
+}
+
+#tagname a{
+  position: absolute;
+  margin-left: 10vw;
+  color: white;
+  right:0;
+}
+
+/*================ Main Box ================*/
+.toolbox{
+  display:flex;
+  /* border: 2px solid white; */
+  height: 90vh; width: 90vw;
+  margin: 10px; margin-top: 50px;
+  justify-content: space-around;
+  align-items: baseline;
+
+}
+
+/*================ CardEffects ================*/
+.card{
+  background-size:100% 100%;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid white;
+  background-color: gray;
+  height: 30%; width: 25%;
+  margin-top:20px;
+  border-radius:15px;
+  border-top-left-radius: 30px;
+  transition:0.4s;
+}
+
+.card:hover{
+  box-shadow:10px 10px 5px rgba(255, 255, 255, 0.402);
+  transform: scale(1.1);
+}
+
+.cardOverlay{
+  position:absolute;
+  background-color:rgba(0,0,0,0.8);
+  top: 0; bottom: 0; right: 0; left:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white; font-family:'Times New Roman', Times, serif;
+  flex-direction:column;
+  box-shadow: 10px,10px;
+  opacity: 0;
+}
+
+.card:hover .cardOverlay{
+  opacity: 1;
+}
+
+/*================ Cards ================ */
+#card1{
+  background-image:url(/Images/Morse_code.webp);
+}
+
+#card2{
+  background-image:url(/Images/Binary.png);
+
+}
+
+#card3{
+  background-image:url(/Images/Touch_typing.webp);
+}
+
+/*==================== Footer ====================*/
+footer{
+  display:flex;
+  /* background:linear-gradient(to bottom right,cornflowerblue,darkblue); */
+  height:10vh;
+  justify-content: flex-end;
+}
+
+/* .preview-text {
+  color: white;
+  font-family: sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  
+  display: none;
+}
+#cardshown {
+  height: 200px; width: 200px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  margin: 20px auto;
+  border-radius: 15px;
+  background-color: #1a1a1a;
+  transition: background-image 0.3s ease-in-out;
+} */
+
+.preview-box{
+  display:flex;
+  height: 30vh; width: 90vw;
+  margin-left: 20px; margin-top:50px;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 15px;
+  background-color:rgba(0, 0, 0, 0.6);
+}
+
+.preview-box #cardimg{
+  height: 80%; width: 25%;
+  background-size: 100% 100%;
+  border-radius: 15px;
+}
+
+.preview-box #cardinfo {
+  height: 80%; 
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: sans-serif;
+}
+.preview-box #cardinfo strong{
+  font-size: 1.5rem;
+}
+
+/* ==================== About ==================== */
+#aboutpanel{
+  position:fixed;
+  top: -100%;
+  left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  color:white;
+  display:flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: 0.5s;
+  z-index: 1000;
+  font-size:1.6rem;
+  backdrop-filter: blur(10px);
+}
+#aboutpanel.show{
+  top:0;
+}
+
+.content{
+  text-align:center;
+  max-width: 500px;
+}
+
+button{
+  margin-top: 20px;
+  padding: 10px 20px;
+}
