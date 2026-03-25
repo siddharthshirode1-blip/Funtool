@@ -1,0 +1,119 @@
+body{
+    background:linear-gradient(to bottom,black,rgb(0, 0, 0, 0.696));
+    background-repeat:no-repeat;
+    min-height:100vh;
+    color:white;
+}
+
+/*=============== Labels ===============*/
+main label{
+    margin-left:2vw;
+}
+
+/*=============== HintButton ===============*/
+#hintbtn{
+    position:absolute;
+    left:90%;
+}
+
+#hintsheet{
+  position:fixed;
+  top: -100%;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  color:white;
+  transition: 0.5s;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+#hintsheet.show{
+    top:0;
+}
+
+/*================== Q/A Sheet ==================*/
+.sheet{
+    border:2px solid white;
+    margin:10px;
+    font-size:2em;
+    border-radius:15px;
+    padding:10px;
+}
+/*==================== TextInput ====================*/
+#abcInput{
+    display:none;
+    width: 2em;
+    font-size: 1em;
+    text-transform: uppercase;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/*==================== ModeButton ====================*/
+#modebtn{
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/*==================== AnswerButtons ====================*/
+.answerbtns{
+    display:flex;
+    justify-content: space-around;
+}
+
+.answerbtns button{
+    height:4em; width:4em;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+.answerbtns .dashbtn .dashh{
+    height:5px; width:20px;
+    border:1px solid black;
+    background-color:black;
+    border-radius: 2px;
+}
+.answerbtns #dotbtn .dott{
+    height: 7px; width:7px;
+    border:1px solid black;
+    background-color:black;
+    border-radius: 50%;
+}
+.answerbtns button:active{
+    background-color:rgba(0, 0, 0, 0.7);
+    color:white;
+}
+
+/*==================== FunctionButtons ====================*/
+.funbtn{
+    margin-top:1em;
+    display:flex;
+    justify-content: space-around;
+}
+
+.funbtn button{
+    height:4em; width:8em;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.funbtn button:active{
+    background-color:rgba(0, 0, 0, 0.7);
+    color:white;
+}
+
+/* =================== Footer =================== */
+footer{
+    display:flex;
+    justify-content:flex-end;
+}
+footer p{
+    position: absolute;
+    bottom:0;
+}
