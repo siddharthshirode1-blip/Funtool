@@ -1,37 +1,50 @@
 $(document).ready(function(){
-    $("#card1").mouseenter(function(){
+    $(".card").mouseenter(function(){
+
+        let hoverdata = $(this).attr("data-info");
+        let hoverimg = $(this).attr("data-img");
+        
         $("#cardimg").css({
-            "background-image": "url('Images/Morse_code.webp')"
+            "background-image": "url('" + hoverimg + "')"
         })
-        $("#cardinfo").html("<strong>Morse_Code:</strong><br><p>Learn or Convert into the language of dot and dash")
+
+        $("#cardinfo").html(hoverdata)
     });
 
-    $("#card2").mouseenter(function(){
-        $("#cardimg").css({
-            "background-image": "url('Images/Binary.png')"
-        })
-        $("#cardinfo").html("<h1>Locked</h1><br><strong>Binary:</strong><br><p>Learn or Convert into 1 & 0's")
-    })
+    // $("#card2").mouseenter(function(){
+    //     $("#cardimg").css({
+    //         "background-image": "url('/')"
+    //     })
+    //     $("#cardinfo").html("    ")
+    // })
 
-    $("#card3").mouseenter(function(){
-        $("#cardimg").css({
-            "background-image": "url('Images/Touch_typing.webp')"
-        })
-        $("#cardinfo").html("<h1>Locked</h1><br><strong>TouchTying:</strong><br><p>Learn and Type as a professional")
-    })
+    // $("#card3").mouseenter(function(){
+    //     $("#cardimg").css({
+    //         "background-image": "url('/')"
+    //     })
+    //     $("#cardinfo").html("")
+    // })
 
-    let panel = document.getElementById("aboutpanel");
+    // let panel = document.getElementById("aboutpanel");
 
-    let aboutbtn = document.getElementById("about");
+    // let aboutbtn = document.getElementById("about");
 
-    aboutbtn.addEventListener("click",function(){
-        panel.classList.add("show");
+    // aboutbtn.addEventListener("click",function(){
+
+    //     panel.classList.add("show");
+    // });
+    $("#about").click(function(event){
+        event.preventDefault();
+        $("#aboutpanel").addClass("show");
     });
 
-    let aclosebtn = document.getElementById("closebtn");
-    aclosebtn.onclick = function(){
-        panel.classList.remove("show");
-    }
+    // let aclosebtn = document.getElementById("closebtn");
+    // aclosebtn.onclick = function(){
+    //     panel.classList.remove("show");
+    // }
+    $("#closebtn").click(function(){
+        $("#aboutpanel").removeClass("show");
+    });
 })
 
 

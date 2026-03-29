@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary</title>
+    <style>
+        html body{
+            background:linear-gradient(to bottom,black,rgb(0, 0, 0, 0.696));
+            background-repeat: no-repeat;
+            color: white;
+            min-height:100vh; min-width:100vw;
+        }
+
+        #title{
+            text-align:center;
+            display:block;
+        }
+        textarea{
+            height:100px; width:80%;
+            border-radius:15px;
+            padding:5px;
+            margin: 1.6rem; margin-left: 10%;
+            border-color:black;
+        }
+        button{
+            border-radius:10px;
+            padding:1.1em;
+            transition:0.4s;
+        }
+        button:hover{
+            transform: scale(1.1);
+            color:black
+        }
+        button:active{
+            background-color:rgba(255, 255, 255, 0.495);
+        }
+        footer{
+            display:flex;
+            justify-content:flex-end;
+            position:absolute;
+            bottom:0; right:0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Binary</h1>
+        <h1 id="title">Convertor</h1>
+    </header>
+    <main>
+        <textarea id="input" placeholder="Enter text or Binary..."></textarea><br>
+        <center>
+            <button onclick="Text_Morse()">Text → Binary</button> 
+            <button onclick="Morse_Text()">Binary → Text</button><br>
+        </center>
+        <textarea id="output" placeholder="Result..."></textarea>
+    </main>
+    <footer>
+        <p>Project = #02BC2-6</p>
+    </footer>
+    <script>
+        const AlphaBin = {
+            a: "01100001", b: "01100010", c: "01100011", d: "01100100", e: "01100101",
+            f: "01100110", g: "01100111", h: "01101000", i: "01101001", j: "01101010",
+            k: "01101011", l: "01101100", m: "01101101", n: "01101110", o: "01101111",
+            p: "01110000", q: "01110001", r: "01110010", s: "01110011", t: "01110100",
+            u: "01110101", v: "01110110", w: "01110111", x: "01111000", y: "01111001",
+            z: "01111010",
+            0: "00110000", 1: "00110001", 2: "00110010", 3: "00110011", 4: "00110100",
+            5: "00110101", 6: "00110110", 7: "00110111", 8: "00111000", 9: "00111001",
+            " ": "00100000"
+        };
+        
+        const BinAlpha = {};
+        for(let b in AlphaBin){
+            BinAlpha[AlphaBin[b]] = b;
+        }
+
+        function Text_Morse(){
+            let input = document.getElementById("input").value.toLowerCase();
+            let output = "";
+            for(let b of input){
+                output += (AlphaBin[b] || "") + " ";
+            }
+            document.getElementById("output").value = output;
+        }
+
+        function Morse_Text(){
+            let input = document.getElementById("input").value.trim().split(" ");
+            let output = "";
+            for(let m of input){
+                output += (BinAlpha[m] || "");
+            }
+            document.getElementById("output").value = output.toLowerCase();
+        }
+    </script>
+</body>
+</html>
