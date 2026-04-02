@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="touchtyping.css">
+    <script src="jquery-3_6_0.js"></script>
+    <script src="touchtyping.js"></script>
+    <title>Touchtyping</title>
+</head>
+<body>
+    <header>
+        <h1>TouchTyping</h1>
+    </header>
+
+    <main>
+        <div id="typingpad">
+            <div id="typinginfo">
+                <p id="typingtime">Time: <span id="timer">0</span></p>
+                <p id="typingwpm">WPM: <span id="wpm">0</span></p>
+                <p id="typingmistakes">Mistakes: <span id="mistakes">0</span></p>
+                <p>Range: 
+                    <select id="wordrange">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <input type="number" id="customrange">
+                </p>
+            </div>
+            <div id="typingwordpad">
+                <p id="typingwords"></p>
+                <textarea id="typinginput" autofocus></textarea>
+            </div>
+        </div>
+        <div id="resultsboard">
+            <h2>Game Over! 🚀</h2>
+            <div class="stats-grid">
+                <p>Time: <span id="res-time">0</span>s</p>
+                <p>Speed: <span id="res-wpm">0</span> WPM</p>
+                <p>Words: <span id="wordscount">0</span></p>
+                <p>Leftover Mistakes: <span id="res-mistakes">0</span></p>
+                <p>Total Typos Made: <span id="res-totaltypos">0</span></p>
+            </div>
+            <button id="restartbtn">Play Again</button>
+        </div>
+    </main>
+    <footer>
+        <div> </div>
+        <p>#03TT2-6</p>
+    </footer>
+</body>
+</html>

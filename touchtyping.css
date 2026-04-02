@@ -1,0 +1,171 @@
+body{
+    background:linear-gradient(to bottom,black,rgba(0, 0, 0, 0.696));
+    background-repeat:no-repeat;
+    background-size:100% 100%;
+    color:white;
+}
+
+/*================== LogoHeading ==================*/
+header h1{
+    margin-left:2vw;
+}
+
+/* ================ hintbutton ====================*/
+header button{
+    position:absolute;
+    right:5%;
+}
+
+/* ==================== Typing Pad ==================== */
+#typingpad{
+    display: flex;
+    border:2px solid white;
+    flex-direction: column;
+    background-color: black;
+    border-radius: 15px;
+    margin-top:50px;
+}
+#typingwords{
+    margin-left:5vw;
+}
+
+#typinginfo{
+    display:flex;
+    flex-direction:row;
+    justify-content: space-around;
+    align-items: center;
+    border-top-right-radius: 15px; border-top-left-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.134);
+    font-weight:bold;
+    font-size:1.1rem;
+}
+
+/* =========================================
+   Sleek Dropdown & Custom Input Styling
+   ========================================= */
+
+#wordrange, #customrange {
+    background-color: #2b2b2b; /* Slightly lighter than the main background */
+    color: #e2e8f0; /* Soft white text */
+    border: 2px solid #444; /* Subtle dark border */
+    border-radius: 8px; /* Smooth rounded corners */
+    padding: 6px 12px;
+    font-size: 1rem;
+    font-family: 'Courier New', Courier, monospace; /* Keeps the coding vibe */
+    outline: none; /* Kills the ugly default browser blue ring */
+    transition: all 0.3s ease; /* Smooth animations */
+    cursor: pointer;
+}
+
+/* Add a little space between the dropdown and the custom input */
+#customrange {
+    margin-left: 10px;
+    width: 70px; /* Keeps the box from getting too long */
+    cursor: text;
+}
+
+/* 🖱️ The Hover State */
+#wordrange:hover, #customrange:hover {
+    border-color: #666;
+    background-color: #333;
+}
+
+/* ✨ The Focus State (When they click to type or select) */
+#wordrange:focus, #customrange:focus {
+    border-color: #00ffcc; /* That sweet cyan Monkeytype glow */
+    background-color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.2); /* Soft glowing aura */
+}
+
+/* 🚀 PRO-TRICK: Hide the ugly up/down arrows inside the number input */
+#customrange::-webkit-inner-spin-button, 
+#customrange::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+
+/* ============================== TEXT ============================== */
+#typingwords {
+    font-family:monospace;
+    font-size: 1.8rem;
+    color: #555;
+    line-height: 1.5;
+    font-weight:bold;
+}
+
+/* ============================ Message ============================  */
+#typingwords span.active{
+    border-left:#00ffcc 3px solid;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink{
+    50% {border-color:transparent;}
+}
+
+#typingwords span.correct{
+    color:#fff;
+}
+#typingwords span.incorrect{
+    color:rgb(255, 83, 83);
+    text-decoration: underline dashed red;
+}
+
+textarea{
+    position:relative;
+    opacity:0;
+    z-index: -999;
+}
+
+/* ==================== Results Board ==================== */
+#resultsboard {
+    display: none; /* Hidden until the game ends! */
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #1a1a1a;
+    border: 2px solid #00ffcc;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+}
+
+#resultsboard h2 {
+    color: #00ffcc;
+    margin-top: 0;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e2e8f0;
+}
+
+#restartbtn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #00ffcc;
+    color: black;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+#restartbtn:hover {
+    background-color: white;
+}
+
+/* We will add this class using JS when the game ends! */
+.blur-effect {
+    filter: blur(5px);
+    opacity: 0.5;
+    transition: all 0.5s ease;
+}
+
+/* ============= footer ================== */
+footer div{
+    height: 55vh;
+}
