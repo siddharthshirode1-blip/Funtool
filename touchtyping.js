@@ -1,17 +1,22 @@
 $(document).ready(function(){
     $("#customrange").hide();
     
-    // ==== All our tracking variables ====
+    // ==== All tracking variables ====
     let mistakes = 0;
     let istyping = false;
     let time = 0;
     let timememory = null;
-    
-    // NEW: Variables to track EVERY single typo
     let totalRawMistakes = 0; 
     let previousTextLength = 0; 
 
-    const words = [
+const words = [
+        // --- Grammatical Words ---
+        "a", "an", "the", "and", "or", "but", "if", 
+        "of", "in", "to", "for", "with", "on", "at", "by", "from", 
+        "is", "it", "be", "as", "so", "we", "he", "she", "they", "you", 
+        "i", "that", "this", "are", "was", "were", "do", "not", "have",
+
+        // --- Main Words ---
         "apple", "animal", "always", "about", "again",
         "brave", "build", "banana", "basic", "begin",
         "catch", "clever", "cloud", "clean", "color",
@@ -89,7 +94,7 @@ $(document).ready(function(){
         messages = messages.trim();
 
         messages.split("").forEach(char =>{
-            $("#typingwords").append(`<span>${char}</span>`);
+            $("#typingwords").append(`<span data-char="${char}">${char}</span>`);
         });
 
         // === Animation & Unlock Box ===
@@ -161,14 +166,18 @@ $(document).ready(function(){
         
         spans.each(function(index){
             let typedchar = typedtext[index];
-            let expectedchar = $(this).text();
+            let expectedchar = $(this).attr("data-char");
 
             if(typedchar ==  null){
-                // nothing
+                $(this).text(expectedchar);
+                
             } else if (typedchar === expectedchar){
+                $(this).text(expectedchar);
                 $(this).addClass("correct");
             } else {
+                $(this).text(typedchar);
                 $(this).addClass("incorrect");
+
                 mistakes++; // This just counts the currently visible red letters
             }
         });
