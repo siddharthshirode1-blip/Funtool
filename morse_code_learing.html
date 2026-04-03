@@ -4,27 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>morse_code_learning</title>
-    <link rel="stylesheet" href="morse_code_learning.css">
-    <script src="jquery-3_6_0.js"></script>
-    <script src="morse_code_learning.js"></script>
+    <link rel="stylesheet" href="/morse_code_learning.css">
+    <script src="/jquery-3_6_0.js"></script>
+    <script src="/morse_code_learning.js"></script>
 </head>
 <body>
-    <header>
+<header>
         <h2>MorseCode</h2>
-        <button id="hintbtn"><b>i</b></button>
+        <button id="hintbtn" style="position:absolute; right:5%; top: 20px;"><b>i</b></button>
+        
         <div id="hintsheet">
-            <p style="font-size:xx-large">Info:</p>
-            <p>CheetSheet:</p>
-            <img src="Images/morse_code_cheetsheet.jpg">
-            <p style="font-size:x-large;">How to play:</p>
-            <p style="font-size:large">Levels:</p>
-            <p><b>Start:</b>Min Question Range<br><b>End:</b>Max Question Range.</p>
-            <p style="font-size:large">Mode:</p>
-            <p>GuessMode: Question in MorseCode, Answer in Alphabet<br>GuessAbc: Question in Alphabet, Answer in MorseCode</p>
-            <button id="closeinfo">Close</button>
+            <div class="hint-content">
+                <p style="font-size:xx-large; margin-top:0;">Info:</p>
+                <p>CheatSheet:</p>
+                <img src="Images/morse_code_cheetsheet.jpg" style="max-width: 100%; border-radius: 10px;">
+                <p style="font-size:x-large;">How to play:</p>
+                <p style="font-size:large">Levels:</p>
+                <p><b>Start:</b> Min Question Range<br><b>End:</b> Max Question Range.</p>
+                <p style="font-size:large">Mode:</p>
+                <p>GuessMode: Question in MorseCode, Answer in Alphabet<br>GuessAbc: Question in Alphabet, Answer in MorseCode</p>
+                <button id="closeinfo">Close</button>
+            </div>
         </div>
-        <h1>Learing</h1>
-        <p>If you want to convert text ↔ morse <a href="Morse_code.html" style="color:white;font-size:bold">click here.</a></p>
+        <h1>Learning</h1>
+        <p>If you want to convert text ↔ morse <a href="Morse_code.html" style="color:white; font-weight:bold;">click here.</a></p>
     </header>
     <main>
         <p>Level:</p>
