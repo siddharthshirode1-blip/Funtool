@@ -39,7 +39,10 @@ const words = [
         "time", "train", "trust", "today", "thing",
         "under", "uncle", "unique", "until", "usual",
         "voice", "visit", "value", "valid", "video",
-        "water", "world", "wonder", "whole", "watch"
+        "water", "world", "wonder", "whole", "watch",
+        "xray", "xylophone", "xenon", "xerox", "xylem",
+        "yellow", "young", "year", "yield", "youth",
+        "zebra", "zero", "zone", "zeal", "zoom"
     ];
 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
