@@ -227,4 +227,19 @@ const words = [
             $("#wpm").text(currentWPM);
         }
     }
+
+    // ================= Cheetsheet PopUp ======================
+    $("#cheetsheeton").click(function(){
+        $(".cheetsheet").css("display","flex").hide().fadeIn(400);
+    });
+
+    $("#cheetsheetoff").click(function(){
+        $(".cheetsheet").fadeOut(400);
+    });
+
+    $(document).keydown(function(value){
+        if(value.key === "Enter"){
+            loadmessage();
+        }
+    })
 });
