@@ -239,6 +239,7 @@ const words = [
 
     $(document).keydown(function(value){
         if(value.key === "Enter"){
+            event.preventDefault();
             loadmessage();
         }
     })
