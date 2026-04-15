@@ -50,13 +50,17 @@
         </div>
         <div id="resultsboard">
             <h2>Game Over! 🚀</h2>
+            <h3 id="highscore-alert" style="color: yellow; display: none;">🏆 NEW HIGH SCORE! 🏆</h3>
             <div class="stats-grid">
                 <p>Time: <span id="res-time">0</span>s</p>
                 <p>Speed: <span id="res-wpm">0</span> WPM</p>
                 <p>Words: <span id="wordscount">0</span></p>
                 <p>Leftover Mistakes: <span id="res-mistakes">0</span></p>
-                <p>Total Typos Made: <span id="res-totaltypos">0</span></p>
+                <p>Total Typos: <span id="res-totaltypos">0</span></p>
             </div>
+            <p style="margin-top: 15px; font-weight: bold; color: #00ffcc;">
+                Your All-Time Best (<span id="hs-category"></span> Words): <span id="res-highscore">0</span> WPM
+            </p>
             <button id="restartbtn">Play Again</button>
         </div>
     </main>

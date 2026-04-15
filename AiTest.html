@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom MCQ Builder</title>
+    <link rel="stylesheet" href="AiTest.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="AiTest.js"></script>
+</head>
+<body>
+    <header>
+        <h1>🚀 Quick Quiz Maker</h1>
+    </header>
+
+    <main>
+        <div id="creator-mode">
+            <h2>Create Your Test</h2>
+            
+            <div id="all-questions-container">
+            </div>
+
+            <button id="add-question-btn" style="background-color: #444; margin-bottom: 20px;">➕ Add Another Question</button>
+            <br>
+            
+            <button id="preview-test-btn" class="primary-btn" style="background-color: #ffaa00; margin-bottom: 15px;">👀 Preview Test (Offline)</button>
+            <button id="generate-link-btn" class="primary-btn">Generate Shareable Link</button>
+            
+            <div id="share-box" style="display: none; margin-top: 20px;">
+                <p>✅ Test Created! Send this link to your friends:</p>
+                <textarea id="share-link" readonly></textarea>
+                <p>Link will be valid for 24hrs</p>
+            </div>
+        </div>
+
+        <div id="taker-mode" style="display: none;">
+            <h2 id="taker-title">Take the Test!</h2>
+            
+            <div id="test-questions-display">
+            </div>
+            
+            <button id="submit-answer-btn" class="primary-btn">Submit Test</button>
+            <p id="result-message"></p>
+            
+            <button id="back-to-editor-btn" style="display:none; margin-top: 15px; background-color: #ffaa00; color: black; font-weight: bold;">Back to Editor</button>
+            <button id="create-own-btn" style="display:none; margin-top: 15px;">Create Your Own Test</button>
+        </div>
+    </main>
+</body>
+</html>

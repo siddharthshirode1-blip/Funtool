@@ -186,25 +186,49 @@ const words = [
         });
 
         // ==== THE FINISH LINE ====
+        // ==== THE FINISH LINE ====
         if(typedtext.length === spans.length){
             clearInterval(timememory);
             $("#typinginput").prop("disabled", true);
             spans.removeClass("active");
-            
-            // 1. Apply the VISUAL BLUR to the text paragraph!
             $("#typingwords").addClass("blur-effect");
             
             updateWPM();
-            
-            // 2. Load the stats into the results board
-            $("#res-time").text(time);
-            $("#res-wpm").text($("#wpm").text());
-            $("#res-mistakes").text(mistakes);
-            $("#res-totaltypos").text(totalRawMistakes); // Show raw typos!
-            
-            // 3. Show the results board with a cool slide animation
-            $("#resultsboard").slideDown();
+            let currentWPM = parseInt($("#wpm").text());
+            let wordMode = $("#wordrange").val(); // Get the mode they just played
 
+            // 1. Load the basic stats
+            $("#res-time").text(time);
+            $("#res-wpm").text(currentWPM);
+            $("#res-mistakes").text(mistakes);
+            $("#res-totaltypos").text(totalRawMistakes);
+            $("#highscore-alert").hide(); // Hide the alert by default
+
+            // 2. High Score Logic! (Only run if it's NOT custom mode)
+            if (wordMode !== "custom") {
+                let storageKey = "highscore_" + wordMode; // e.g., highscore_10
+                let savedHighScore = localStorage.getItem(storageKey) || 0;
+                savedHighScore = parseInt(savedHighScore);
+
+                // Did they beat it?
+                if (currentWPM > savedHighScore) {
+                    localStorage.setItem(storageKey, currentWPM); // Save new score
+                    savedHighScore = currentWPM; // Update variable for display
+                    $("#highscore-alert").fadeIn(); // Trigger the celebration text!
+                }
+
+                // Show the scores on the board
+                $("#hs-category").text(wordMode);
+                $("#res-highscore").text(savedHighScore);
+                $("#res-highscore").parent().show(); // Make sure the line is visible
+
+            } else {
+                // If they played custom mode, hide the high score text entirely
+                $("#res-highscore").parent().hide(); 
+            }
+            
+            // 3. Show the board
+            $("#resultsboard").slideDown();
             return;
         }
 
