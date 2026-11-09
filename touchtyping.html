@@ -1,72 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="touchtyping.css">
-    <script src="jquery-3_6_0.js"></script>
-    <script src="touchtyping.js"></script>
-    <title>Touchtyping</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Touch Typing Trainer - FunTools</title>
+  <link rel="stylesheet" href="homepage.css">
+  <link rel="stylesheet" href="touchtyping.css">
+  <script src="jquery-3_6_0.js"></script>
+  <script src="touchtyping.js" defer></script>
 </head>
 <body>
-    <header>
-        <h1>TouchTyping</h1>
-    </header>
-    <main>
-        <button id="cheetsheeton"><b>&quest;</b></button>
-        <div class="cheetsheet">
-            <div class="cheetsheet-content">
-                <h3>Rules:</h3>
-                <p>Avoid looking at keyborad while typing</p>
-                <h3>How To:</h3>
-                <p>Keep Index fingers on f and j feel the bump</p>
-                <p>Keep all the fingers on the home keys shown in the image</p>
-                <p>To be noted: after typing any key finger should come back to its home key</p>
-                <p>Its feels weird and uncomfatable and alot slower but slowing the speed will increases</p>
-                <img src="Images/touchtypingcheetsheet.png" height="300"><br><br>
-                <button id="cheetsheetoff">close</button>
-            </div>
+  <!-- Navigation Header -->
+  <header class="site-header" style="padding-bottom: 1rem;">
+    <nav class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Fun<span class="accent-text">Tools</span></span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="Morse_code.html" class="nav-link">Morse Code</a>
+        <a href="Binary.html" class="nav-link">Binary</a>
+        <a href="touchtyping.html" class="nav-link active">Touch Typing</a>
+        <a href="AiTest.html" class="nav-link">Quiz Maker</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="typing-container">
+    <!-- Header row -->
+    <div class="trainer-header-row">
+      <div>
+        <h1>Touch Typing <span class="gradient-text">Trainer</span></h1>
+        <p>Master speed, muscle memory, and flawless accuracy</p>
+      </div>
+      <div class="header-action-links">
+        <button id="cheetsheeton" class="icon-btn" title="View Finger Placement Guide">⌨️ Technique Guide</button>
+        <button id="soundToggleBtn" class="icon-btn" title="Toggle Mechanical Click Audio">🔊 Sound: ON</button>
+      </div>
+    </div>
+
+    <!-- The Typing Console Box -->
+    <div id="typingpad" class="glass-card">
+      <!-- Live Realtime Telemetry Bar -->
+      <div id="typinginfo">
+        <div class="telemetry-item">
+          <span class="telemetry-label">Time</span>
+          <span class="telemetry-value" id="timer">0s</span>
         </div>
-        <div id="typingpad">
-            <div id="typinginfo">
-                <p id="typingtime">Time: <span id="timer">0</span></p>
-                <p id="typingwpm">WPM: <span id="wpm">0</span></p>
-                <p id="typingmistakes">Mistakes: <span id="mistakes">0</span></p>
-                <p>Words: 
-                    <select id="wordrange">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                    <input type="number" id="customrange">
-                </p>
-            </div>
-            <div id="typingwordpad">
-                <p id="typingwords"></p>
-                <textarea id="typinginput" autofocus></textarea>
-                <p><kbd id="tabsymbol">Enter</kbd> - Reset</p>
-            </div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">Speed</span>
+          <span class="telemetry-value accent" id="wpm">0 <small>WPM</small></span>
         </div>
-        <div id="resultsboard">
-            <h2>Game Over! 🚀</h2>
-            <h3 id="highscore-alert" style="color: yellow; display: none;">🏆 NEW HIGH SCORE! 🏆</h3>
-            <div class="stats-grid">
-                <p>Time: <span id="res-time">0</span>s</p>
-                <p>Speed: <span id="res-wpm">0</span> WPM</p>
-                <p>Words: <span id="wordscount">0</span></p>
-                <p>Leftover Mistakes: <span id="res-mistakes">0</span></p>
-                <p>Total Typos: <span id="res-totaltypos">0</span></p>
-            </div>
-            <p style="margin-top: 15px; font-weight: bold; color: #00ffcc;">
-                Your All-Time Best (<span id="hs-category"></span> Words): <span id="res-highscore">0</span> WPM
-            </p>
-            <button id="restartbtn">Play Again</button>
+        <div class="telemetry-item">
+          <span class="telemetry-label">Accuracy</span>
+          <span class="telemetry-value" id="accuracy">100%</span>
         </div>
-    </main>
-    <footer>
-        <div> </div>
-        <p>#03TT2-6</p>
-    </footer>
+        <div class="telemetry-item">
+          <span class="telemetry-label">Mistakes</span>
+          <span class="telemetry-value error" id="mistakes">0</span>
+        </div>
+
+        <div class="word-selector-wrap">
+          <span class="telemetry-label">Mode:</span>
+          <select id="wordrange">
+            <option value="15">15 Words</option>
+            <option value="25" selected>25 Words</option>
+            <option value="50">50 Words</option>
+            <option value="custom">Custom</option>
+          </select>
+          <input type="number" id="customrange" min="5" max="100" value="30" placeholder="Count">
+        </div>
+      </div>
+
+      <!-- Word Display Pad -->
+      <div id="typingwordpad">
+        <div id="typingwords" class="typing-stream"></div>
+        <!-- Hidden input for mobile keyboard and keystroke capture -->
+        <textarea id="typinginput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus></textarea>
+      </div>
+
+      <div class="typing-footer-bar">
+        <span class="hint-text"><kbd id="tabsymbol">Tab</kbd> or <kbd id="entersymbol">Enter</kbd> to quickly restart</span>
+        <button id="manualRestartBtn" class="restart-small-btn">↻ Restart Test</button>
+      </div>
+    </div>
+
+    <!-- Interactive Visual Virtual Keyboard -->
+    <div class="virtual-keyboard-section glass-card">
+      <div class="keyboard-header">
+        <span>Dynamic Finger Placement &amp; Target Key:</span>
+        <span id="fingerGuideTip" class="finger-tip">Home Row: Index fingers on F and J</span>
+      </div>
+      <div class="keyboard" id="visualKeyboard">
+        <!-- Rows built dynamically in JS for crisp highlighting -->
+      </div>
+    </div>
+
+    <!-- Results Modal / Board -->
+    <div id="resultsboard" class="results-modal">
+      <div class="results-content glass-card">
+        <div class="results-header">
+          <h2>Test Complete! 🚀</h2>
+          <div id="performanceBadge" class="performance-badge">PRO TYPIST</div>
+        </div>
+
+        <h3 id="highscore-alert" class="highscore-badge">🏆 NEW ALL-TIME HIGH SCORE! 🏆</h3>
+
+        <div class="results-stats-grid">
+          <div class="res-stat-card">
+            <span class="res-label">Gross Speed</span>
+            <span class="res-val highlight" id="res-wpm">0</span>
+            <span class="res-unit">Words / Min</span>
+          </div>
+          <div class="res-stat-card">
+            <span class="res-label">Accuracy</span>
+            <span class="res-val" id="res-accuracy">100%</span>
+            <span class="res-unit">Correct Keystrokes</span>
+          </div>
+          <div class="res-stat-card">
+            <span class="res-label">Time Elapsed</span>
+            <span class="res-val" id="res-time">0</span>
+            <span class="res-unit">Seconds</span>
+          </div>
+          <div class="res-stat-card">
+            <span class="res-label">Total Typos</span>
+            <span class="res-val error" id="res-totaltypos">0</span>
+            <span class="res-unit">Corrections Made</span>
+          </div>
+        </div>
+
+        <div class="best-score-row" id="highScoreRow">
+          <span>Personal Best (<span id="hs-category">25</span> Words):</span>
+          <strong id="res-highscore">0 WPM</strong>
+        </div>
+
+        <div class="results-actions">
+          <button id="restartbtn" class="primary-btn">Play Again (Enter)</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Technique & Finger Placement Guide Modal -->
+  <div class="cheatsheet" role="dialog" aria-modal="true">
+    <div class="cheatsheet-content glass-card">
+      <div class="modal-header">
+        <h2>Touch Typing <span class="gradient-text">Technique Guide</span></h2>
+        <button id="cheetsheetoff" class="close-x-btn">&times;</button>
+      </div>
+      <div class="modal-body-scroll">
+        <div class="rules-box">
+          <h3>Golden Rules:</h3>
+          <ul>
+            <li><strong>Never look down at your keyboard</strong> — trust your tactile muscle memory!</li>
+            <li>Rest index fingers on <strong>F</strong> and <strong>J</strong> (feel the small raised tactile bumps).</li>
+            <li>Return your fingers to the <em>Home Row</em> (ASDF JKL;) after each strike.</li>
+            <li>Speed is a byproduct of accuracy: prioritize accuracy first, and speed will follow naturally.</li>
+          </ul>
+        </div>
+        <img src="Images/touchtypingcheetsheet.png" alt="Touch typing finger placement chart" class="cheatsheet-img">
+      </div>
+      <div class="modal-footer">
+        <button id="guideGotItBtn" class="btn-primary">Got it, Let's Type!</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; FunTools Speed Typing Trainer • Real-time Net WPM &amp; Accuracy Calculation</p>
+    </div>
+  </footer>
 </body>
 </html>

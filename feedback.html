@@ -1,74 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback</title>
-    <style>
-        body{
-            background:linear-gradient(to bottom,black,rgb(0, 0, 0, 0.696));
-            background-repeat: no-repeat;
-            min-height: 100vh; min-width: 100vw;
-            color:white;
-            font-family:Arial;
-        }
-        #formdiv{
-            display:flex;
-            background-color:rgba(0,0,0,0.6);
-            width:fit-content;
-            padding:15px;
-            border-radius:15px;
-            margin-left:10vw;
-            margin: 10 auto;
-            border: 2px solid white;
-        }
-        body input{
-            border-radius:15px;
-            padding:5px;
-            margin-left: 10px;
-            transition: 0.4s;
-        }
-        input:hover{
-            transform:scale(1.1);
-        }
-        body textarea{
-            height: 5rem; width: 80%;
-            border-radius:15px;
-            transition: 0.4s;
-        }
-        textarea:hover{
-            transform:scale(1.05);
-        }
-        body button{
-            border-radius: 15px;
-            padding:5px;
-            width: 35%;
-            transition:0.4s;
-        }
-        button:hover{
-            transform:scale(1.1)
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback &amp; Suggestions - FunTools</title>
+  <link rel="stylesheet" href="homepage.css">
+  <style>
+    .feedback-container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 4rem;
+    }
+
+    .feedback-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2.4rem;
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6);
+    }
+
+    .feedback-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .feedback-header-row h1 {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .feedback-header-row p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .form-control {
+      background: #0d121f;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      color: var(--text-primary);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    /* Star Rating Widget */
+    .star-rating-box {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .star-rating-box input[type="radio"] {
+      display: none;
+    }
+
+    .star-rating-box label {
+      font-size: 2.2rem;
+      color: #334155;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    /* Highlight stars on hover and when selected */
+    .star-rating-box label:hover,
+    .star-rating-box label:hover ~ label,
+    .star-rating-box input[type="radio"]:checked ~ label {
+      color: #ffd700;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+      transform: scale(1.1);
+    }
+
+    textarea.form-control {
+      height: 140px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .char-count-wrap {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: #040914;
+      border: none;
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--primary-glow);
+      transition: var(--transition);
+      margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--primary-glow);
+    }
+  </style>
 </head>
 <body>
-    <div id="formdiv">
-        <form action="https://formspree.io/f/mnjgkyoq" method="POST" enctype="multipart/form-data">
-            <h2>Feedback:</h2>
-            Name:
-            <input type="text" name="username" required><br>
-            Gmail:
-            <input type="email" name="email"><br>
-            <h4>Rate:</h4>
-            <input type="radio" value="1star" name="rate">
-            <input type="radio" value="2star" name="rate">
-            <input type="radio" value="3star" name="rate">
-            <input type="radio" value="4star" name="rate">
-            <input type="radio" value="5star" name="rate" required>
-            <h4>Suggestions:</h4>
-            <textarea name="message"></textarea>
-            <br><br>
-            <button type="submit">Submit</button>
-        </form>
+  <!-- Navigation Header -->
+  <header class="site-header" style="padding-bottom: 1rem;">
+    <nav class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Fun<span class="accent-text">Tools</span></span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="Morse_code.html" class="nav-link">Morse Code</a>
+        <a href="Binary.html" class="nav-link">Binary</a>
+        <a href="touchtyping.html" class="nav-link">Touch Typing</a>
+        <a href="AiTest.html" class="nav-link">Quiz Maker</a>
+        <a href="feedback.html" class="nav-link active">Feedback</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="feedback-container">
+    <div class="feedback-card">
+      <div class="feedback-header-row">
+        <div>
+          <h1>We Value Your <span class="gradient-text">Feedback</span></h1>
+          <p>Help us improve FunTools with ideas, bug reports, and suggestions</p>
+        </div>
+        <a href="index.html" class="nav-link" style="background: rgba(255,255,255,0.06);">&larr; Back to Home</a>
+      </div>
+
+      <form action="https://formspree.io/f/mnjgkyoq" method="POST">
+        <!-- Name -->
+        <div class="form-group">
+          <label for="username">Your Name / Nickname *</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="e.g. Alex" required>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email Address (Optional)</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="alex@example.com">
+        </div>
+
+        <!-- Star Rating -->
+        <div class="form-group">
+          <label>Overall Experience Rating *</label>
+          <div class="star-rating-box">
+            <input type="radio" id="star5" name="rate" value="5star" required>
+            <label for="star5" title="5 Stars - Outstanding">★</label>
+
+            <input type="radio" id="star4" name="rate" value="4star">
+            <label for="star4" title="4 Stars - Very Good">★</label>
+
+            <input type="radio" id="star3" name="rate" value="3star">
+            <label for="star3" title="3 Stars - Good">★</label>
+
+            <input type="radio" id="star2" name="rate" value="2star">
+            <label for="star2" title="2 Stars - Fair">★</label>
+
+            <input type="radio" id="star1" name="rate" value="1star">
+            <label for="star1" title="1 Star - Poor">★</label>
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div class="form-group">
+          <label for="message">What new tools or features would you like to see? *</label>
+          <textarea id="message" name="message" class="form-control" placeholder="Share your thoughts, suggestions, or issues..." maxlength="1000" required oninput="updateCharCount()"></textarea>
+          <div class="char-count-wrap" id="charCount">0 / 1000 characters</div>
+        </div>
+
+        <button type="submit" class="submit-btn">🚀 Send Feedback</button>
+      </form>
     </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; FunTools • Your privacy is 100% protected. No telemetry, no trackers.</p>
+    </div>
+  </footer>
+
+  <script>
+    function updateCharCount() {
+      const area = document.getElementById("message");
+      const counter = document.getElementById("charCount");
+      counter.textContent = `${area.value.length} / 1000 characters`;
+    }
+  </script>
 </body>
 </html>

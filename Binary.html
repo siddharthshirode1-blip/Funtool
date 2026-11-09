@@ -1,99 +1,547 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binary</title>
-    <style>
-        html body{
-            background:linear-gradient(to bottom,black,rgb(0, 0, 0, 0.696));
-            background-repeat: no-repeat;
-            color: white;
-            min-height:100vh; min-width:100vw;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary Code Converter - FunTools</title>
+  <link rel="stylesheet" href="homepage.css">
+  <style>
+    .tool-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 4rem;
+    }
 
-        #title{
-            text-align:center;
-            display:block;
-        }
-        textarea{
-            height:100px; width:80%;
-            border-radius:15px;
-            padding:5px;
-            margin: 1.6rem; margin-left: 10%;
-            border-color:black;
-        }
-        button{
-            border-radius:10px;
-            padding:1.1em;
-            transition:0.4s;
-        }
-        button:hover{
-            transform: scale(1.1);
-            color:black
-        }
-        button:active{
-            background-color:rgba(255, 255, 255, 0.495);
-        }
-        footer{
-            display:flex;
-            justify-content:flex-end;
-            position:absolute;
-            bottom:0; right:0;
-        }
-    </style>
+    .converter-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2.2rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .tool-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .tool-title h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .tool-title p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(0, 242, 254, 0.08);
+      transform: translateX(-3px);
+    }
+
+    .mode-switch-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pill-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .pill-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill-tab.active {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: #040914;
+      box-shadow: 0 2px 10px var(--primary-glow);
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 0.55rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .panels-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .panel-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .panel-header span.label {
+      color: var(--primary);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    textarea.custom-area {
+      width: 100%;
+      height: 150px;
+      background: #0d121f;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      resize: vertical;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    textarea.custom-area:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .panel-footer-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .swap-divider {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin: 0.5rem 0;
+    }
+
+    .swap-divider::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--border-subtle);
+      z-index: 0;
+    }
+
+    .swap-btn {
+      position: relative;
+      z-index: 1;
+      background: #162035;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      border-radius: 999px;
+      padding: 0.5rem 1.2rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      transition: var(--transition);
+    }
+
+    .swap-btn:hover {
+      background: var(--primary);
+      color: #040914;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #111a2e;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.8rem 1.4rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 9999;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .options-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+    }
+
+    .checkbox-label input {
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Binary</h1>
-        <h1 id="title">Convertor</h1>
-    </header>
-    <main>
-        <textarea id="input" placeholder="Enter text or Binary..."></textarea><br>
-        <center>
-            <button onclick="Text_Morse()">Text → Binary</button> 
-            <button onclick="Morse_Text()">Binary → Text</button><br>
-        </center>
-        <textarea id="output" placeholder="Result..."></textarea>
-    </main>
-    <footer>
-        <p>Project = #02BC2-6</p>
-    </footer>
-    <script>
-        const AlphaBin = {
-            a: "01100001", b: "01100010", c: "01100011", d: "01100100", e: "01100101",
-            f: "01100110", g: "01100111", h: "01101000", i: "01101001", j: "01101010",
-            k: "01101011", l: "01101100", m: "01101101", n: "01101110", o: "01101111",
-            p: "01110000", q: "01110001", r: "01110010", s: "01110011", t: "01110100",
-            u: "01110101", v: "01110110", w: "01110111", x: "01111000", y: "01111001",
-            z: "01111010",
-            0: "00110000", 1: "00110001", 2: "00110010", 3: "00110011", 4: "00110100",
-            5: "00110101", 6: "00110110", 7: "00110111", 8: "00111000", 9: "00111001",
-            " ": "00100000"
-        };
-        
-        const BinAlpha = {};
-        for(let b in AlphaBin){
-            BinAlpha[AlphaBin[b]] = b;
-        }
+  <!-- Navigation Header -->
+  <header class="site-header" style="padding-bottom: 1.5rem;">
+    <nav class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Fun<span class="accent-text">Tools</span></span>
+      </a>
 
-        function Text_Morse(){
-            let input = document.getElementById("input").value.toLowerCase();
-            let output = "";
-            for(let b of input){
-                output += (AlphaBin[b] || "") + " ";
-            }
-            document.getElementById("output").value = output;
-        }
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="Morse_code.html" class="nav-link">Morse Code</a>
+        <a href="Binary.html" class="nav-link active">Binary</a>
+        <a href="touchtyping.html" class="nav-link">Touch Typing</a>
+        <a href="AiTest.html" class="nav-link">Quiz Maker</a>
+      </div>
+    </nav>
+  </header>
 
-        function Morse_Text(){
-            let input = document.getElementById("input").value.trim().split(" ");
-            let output = "";
-            for(let m of input){
-                output += (BinAlpha[m] || "");
-            }
-            document.getElementById("output").value = output.toLowerCase();
+  <main class="tool-container">
+    <div class="converter-card">
+      <div class="tool-header-row">
+        <div class="tool-title">
+          <h1>Binary <span class="gradient-text">Converter</span></h1>
+          <p>Instant bidirectional translation between human text and 8-bit machine binary</p>
+        </div>
+        <a href="index.html" class="back-btn">&larr; Back to Hub</a>
+      </div>
+
+      <!-- Mode & Controls Bar -->
+      <div class="mode-switch-bar">
+        <div class="pill-tabs" role="tablist">
+          <button class="pill-tab active" id="tabTextToBin" onclick="setMode('textToBin')">Text &rarr; Binary</button>
+          <button class="pill-tab" id="tabBinToText" onclick="setMode('binToText')">Binary &rarr; Text</button>
+        </div>
+
+        <div class="quick-actions">
+          <button class="btn-secondary" onclick="loadSample('Hello World!')">💡 Sample: Hello</button>
+          <button class="btn-secondary" onclick="loadSample('Antigravity')">🚀 Sample: Antigravity</button>
+          <button class="btn-secondary" onclick="clearAll()">🧹 Clear</button>
+        </div>
+      </div>
+
+      <!-- Panels -->
+      <div class="panels-grid">
+        <!-- Input Panel -->
+        <div class="panel-block">
+          <div class="panel-header">
+            <span class="label" id="inputLabel">INPUT (TEXT)</span>
+            <span id="inputCharCount">0 characters</span>
+          </div>
+          <div class="input-wrapper">
+            <textarea id="inputArea" class="custom-area" placeholder="Type or paste plain text here..." oninput="handleConvert()"></textarea>
+          </div>
+          <div class="panel-footer-info">
+            <span>Supports letters, numbers, punctuation, and Unicode symbols</span>
+          </div>
+        </div>
+
+        <!-- Swap Divider -->
+        <div class="swap-divider">
+          <button class="swap-btn" onclick="swapPanels()" title="Swap input and output">
+            <span>⇄</span> Swap Direction
+          </button>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="panel-block">
+          <div class="panel-header">
+            <span class="label" id="outputLabel">OUTPUT (BINARY)</span>
+            <div style="display: flex; gap: 0.6rem; align-items: center;">
+              <span id="outputByteCount">0 bytes</span>
+              <button class="btn-secondary" style="padding: 0.3rem 0.7rem; font-size: 0.8rem;" onclick="copyOutput()">📋 Copy</button>
+            </div>
+          </div>
+          <div class="input-wrapper">
+            <textarea id="outputArea" class="custom-area" placeholder="Result will appear here automatically..." readonly></textarea>
+          </div>
+          <div class="options-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="spaceByteCheck" checked onchange="handleConvert()">
+              Separate bytes with spaces (e.g. 01000001 01000010)
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="liveConvertCheck" checked>
+              Live Real-time Conversion
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast">Copied to clipboard! ✨</div>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; FunTools Binary Engine • Standard UTF-8 / ASCII Byte Encoding</p>
+    </div>
+  </footer>
+
+  <script>
+    let currentMode = "textToBin"; // or 'binToText'
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2400);
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      const tabTextToBin = document.getElementById("tabTextToBin");
+      const tabBinToText = document.getElementById("tabBinToText");
+      const inputLabel = document.getElementById("inputLabel");
+      const outputLabel = document.getElementById("outputLabel");
+      const inputArea = document.getElementById("inputArea");
+      const outputArea = document.getElementById("outputArea");
+
+      if (mode === "textToBin") {
+        tabTextToBin.classList.add("active");
+        tabBinToText.classList.remove("active");
+        inputLabel.textContent = "INPUT (TEXT)";
+        outputLabel.textContent = "OUTPUT (BINARY)";
+        inputArea.placeholder = "Type or paste plain text here...";
+        outputArea.placeholder = "Binary 0s and 1s will appear here...";
+      } else {
+        tabBinToText.classList.add("active");
+        tabTextToBin.classList.remove("active");
+        inputLabel.textContent = "INPUT (BINARY 0 & 1)";
+        outputLabel.textContent = "OUTPUT (TEXT)";
+        inputArea.placeholder = "Paste binary code (e.g., 01001000 01101001)...";
+        outputArea.placeholder = "Decoded text will appear here...";
+      }
+
+      handleConvert();
+    }
+
+    // High quality UTF-8 aware Text to Binary
+    function textToBinary(str, spaceSeparated) {
+      if (!str) return "";
+      const encoder = new TextEncoder();
+      const bytes = encoder.encode(str);
+      const binaryArr = [];
+      for (let i = 0; i < bytes.length; i++) {
+        binaryArr.push(bytes[i].toString(2).padStart(8, "0"));
+      }
+      return binaryArr.join(spaceSeparated ? " " : "");
+    }
+
+    // High quality UTF-8 aware Binary to Text
+    function binaryToText(binStr) {
+      if (!binStr) return "";
+      // Clean up string: keep only 0s and 1s, or extract groups
+      // First normalize by replacing commas, newlines with space
+      const cleaned = binStr.replace(/[^01]/g, " ").replace(/\s+/g, " ").trim();
+      let chunks = [];
+
+      if (cleaned.includes(" ")) {
+        // Space separated
+        chunks = cleaned.split(" ").filter(c => c.length > 0);
+      } else {
+        // Contiguous string without spaces: slice by 8
+        for (let i = 0; i < binStr.length; i += 8) {
+          const byteSlice = binStr.slice(i, i + 8);
+          if (byteSlice.length > 0) chunks.push(byteSlice);
         }
-    </script>
+      }
+
+      const byteValues = [];
+      for (const chunk of chunks) {
+        if (/^[01]{1,8}$/.test(chunk)) {
+          byteValues.push(parseInt(chunk, 2));
+        }
+      }
+
+      try {
+        const uintArray = new Uint8Array(byteValues);
+        return new TextDecoder().decode(uintArray);
+      } catch (e) {
+        // Fallback for non-UTF8
+        return byteValues.map(code => String.fromCharCode(code)).join("");
+      }
+    }
+
+    function handleConvert() {
+      const inputVal = document.getElementById("inputArea").value;
+      const spaceSeparated = document.getElementById("spaceByteCheck").checked;
+      const outputArea = document.getElementById("outputArea");
+
+      document.getElementById("inputCharCount").textContent = `${inputVal.length} character${inputVal.length === 1 ? '' : 's'}`;
+
+      if (!inputVal) {
+        outputArea.value = "";
+        document.getElementById("outputByteCount").textContent = "0 bytes";
+        return;
+      }
+
+      if (currentMode === "textToBin") {
+        const binResult = textToBinary(inputVal, spaceSeparated);
+        outputArea.value = binResult;
+        const byteCount = new TextEncoder().encode(inputVal).length;
+        document.getElementById("outputByteCount").textContent = `${byteCount} byte${byteCount === 1 ? '' : 's'}`;
+      } else {
+        const textResult = binaryToText(inputVal);
+        outputArea.value = textResult;
+        document.getElementById("outputByteCount").textContent = `${textResult.length} character${textResult.length === 1 ? '' : 's'}`;
+      }
+    }
+
+    function swapPanels() {
+      const inputArea = document.getElementById("inputArea");
+      const outputArea = document.getElementById("outputArea");
+      const currentOutput = outputArea.value;
+
+      setMode(currentMode === "textToBin" ? "binToText" : "textToBin");
+      inputArea.value = currentOutput;
+      handleConvert();
+    }
+
+    function loadSample(sampleText) {
+      if (currentMode === "binToText") {
+        setMode("textToBin");
+      }
+      document.getElementById("inputArea").value = sampleText;
+      handleConvert();
+      showToast("Sample text loaded!");
+    }
+
+    function clearAll() {
+      document.getElementById("inputArea").value = "";
+      document.getElementById("outputArea").value = "";
+      document.getElementById("inputCharCount").textContent = "0 characters";
+      document.getElementById("outputByteCount").textContent = "0 bytes";
+      showToast("Cleared!");
+    }
+
+    function copyOutput() {
+      const outputVal = document.getElementById("outputArea").value;
+      if (!outputVal) {
+        showToast("Nothing to copy!");
+        return;
+      }
+      navigator.clipboard.writeText(outputVal).then(() => {
+        showToast("Copied to clipboard! 📋");
+      }).catch(() => {
+        const outputArea = document.getElementById("outputArea");
+        outputArea.select();
+        document.execCommand("copy");
+        showToast("Copied to clipboard! 📋");
+      });
+    }
+
+    // Initialize with a friendly sample
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("inputArea").value = "Welcome to FunTools!";
+      handleConvert();
+    });
+  </script>
 </body>
 </html>

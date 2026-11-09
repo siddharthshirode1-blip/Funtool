@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morse Code Practice &amp; Trainer - FunTools</title>
+  <link rel="stylesheet" href="homepage.css">
+  <link rel="stylesheet" href="morse_code_learning.css">
+  <script src="jquery-3_6_0.js"></script>
+  <script src="morse_code_learning.js" defer></script>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <header class="site-header" style="padding-bottom: 1rem;">
+    <nav class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Fun<span class="accent-text">Tools</span></span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="Morse_code.html" class="nav-link">Morse Studio</a>
+        <a href="Binary.html" class="nav-link">Binary</a>
+        <a href="touchtyping.html" class="nav-link">Touch Typing</a>
+        <a href="AiTest.html" class="nav-link">Quiz Maker</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="game-container">
+    <div class="game-card glass-card">
+      <!-- Top Bar -->
+      <div class="game-top-bar">
+        <div>
+          <h1>Morse Code <span class="gradient-text">Trainer</span></h1>
+          <p>Level up your cipher speed with interactive drills</p>
+        </div>
+        <div class="game-top-actions">
+          <button id="hintbtn" class="icon-btn" title="Open Cheatsheet &amp; Rules">ℹ️ Cheatsheet</button>
+          <a href="Morse_code.html" class="icon-btn" style="text-decoration: none;">⇄ Converter Studio</a>
+        </div>
+      </div>
+
+      <!-- Stats Bar: Score, Streak, Accuracy -->
+      <div class="stats-ribbon">
+        <div class="stat-pill">
+          <span class="stat-label">Score</span>
+          <span class="stat-value" id="scoreDisplay">0</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Streak</span>
+          <span class="stat-value" id="streakDisplay">🔥 0</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Accuracy</span>
+          <span class="stat-value" id="accuracyDisplay">100%</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Best Streak</span>
+          <span class="stat-value" id="bestStreakDisplay">0</span>
+        </div>
+      </div>
+
+      <!-- Controls & Scope Selector -->
+      <div class="settings-toolbar">
+        <div class="mode-toggle-wrap">
+          <button id="modebtn" class="mode-toggle-btn" onclick="toggleMode()">
+            <span id="modeIcon">🔤</span> <span id="modeText">Mode: Guess Morse (A &rarr; •−)</span>
+          </button>
+        </div>
+
+        <div class="range-selector-wrap">
+          <label for="starting">Range:</label>
+          <select id="starting" class="range-select">
+            <!-- Populated dynamically via JS -->
+          </select>
+          <span>to</span>
+          <select id="ending" class="range-select">
+            <!-- Populated dynamically via JS -->
+          </select>
+        </div>
+      </div>
+
+      <!-- The Core Flashcard -->
+      <div class="flashcard">
+        <div class="flashcard-header">
+          <span class="prompt-label" id="promptLabel">Translate this letter into Morse:</span>
+          <button id="listenAudioBtn" class="audio-hint-btn" title="Listen to Morse tone">🔊 Audio Cue</button>
+        </div>
+
+        <div class="big-question" id="question">A</div>
+
+        <!-- Feedback indicator -->
+        <div id="feedbackBanner" class="feedback-banner"></div>
+
+        <!-- Answer display -->
+        <div class="answer-display-box">
+          <div class="answer-label">Your Answer:</div>
+          <!-- For Guess Morse mode: displays typed dots and dashes -->
+          <div id="answer" class="morse-answer-text"></div>
+          <!-- For Guess ABC mode: user types single alphabet letter -->
+          <input type="text" id="abcInput" maxlength="1" placeholder="?" autocomplete="off" autocapitalize="characters">
+        </div>
+      </div>
+
+      <!-- Virtual Morse Keys for Touch & Mouse -->
+      <div class="answerbtns" id="morseKeypad">
+        <button class="morse-key dot-key" onclick="dotinput()" title="Add Dot (.)">
+          <div class="dott"></div>
+          <span>DOT (.)</span>
+        </button>
+        <button class="morse-key dash-key" onclick="dashinput()" title="Add Dash (-)">
+          <div class="dashh"></div>
+          <span>DASH (-)</span>
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="funbtn">
+        <button class="btn-clear" onclick="clearanswer()">⌫ Clear</button>
+        <button class="btn-check" id="checkBtn" onclick="checkanswer()">✓ Check Answer</button>
+      </div>
+
+      <!-- Keyboard Shortcuts Hint -->
+      <p class="keyboard-tip">
+        ⌨️ <strong>Keyboard shortcuts:</strong> Press <code>.</code> for dot, <code>-</code> for dash, <code>Enter</code> to check, <code>Backspace</code> to clear.
+      </p>
+    </div>
+  </main>
+
+  <!-- Cheatsheet & Info Modal -->
+  <div id="hintsheet" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="hint-content glass-card">
+      <div class="modal-header">
+        <h2>Morse Code <span class="gradient-text">Cheat Sheet</span></h2>
+        <button id="closeinfo" class="close-x-btn">&times;</button>
+      </div>
+
+      <div class="modal-body-scroll">
+        <p class="lead-text">Click any letter to hear its Morse audio code!</p>
+        
+        <div class="morse-table-grid" id="morseAlphabetGrid">
+          <!-- Dynamically populated clickable sound table -->
+        </div>
+
+        <div class="cheatsheet-image-wrap">
+          <p style="margin-top: 1.5rem; font-weight: 700;">Diagram Reference:</p>
+          <img src="Images/morse_code_cheetsheet.jpg" alt="Morse Code Visual Cheat Sheet" class="cheatsheet-img">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="closeinfo-btn" class="btn-primary">Back to Practice</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; FunTools Morse Trainer • Instant feedback &amp; Audio recognition</p>
+    </div>
+  </footer>
+</body>
+</html>
+

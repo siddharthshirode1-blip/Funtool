@@ -1,50 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom MCQ Builder</title>
-    <link rel="stylesheet" href="AiTest.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="AiTest.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Quiz &amp; MCQ Maker - FunTools</title>
+  <link rel="stylesheet" href="homepage.css">
+  <link rel="stylesheet" href="AiTest.css">
+  <script src="jquery-3_6_0.js"></script>
+  <script src="AiTest.js" defer></script>
 </head>
+
 <body>
-    <header>
-        <h1>🚀 Quick Quiz Maker</h1>
-    </header>
+  <!-- Navigation Header -->
+  <header class="site-header" style="padding-bottom: 1rem;">
+    <nav class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Fun<span class="accent-text">Tools</span></span>
+      </a>
 
-    <main>
-        <div id="creator-mode">
-            <h2>Create Your Test</h2>
-            
-            <div id="all-questions-container">
-            </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="Morse_code.html" class="nav-link">Morse Code</a>
+        <a href="Binary.html" class="nav-link">Binary</a>
+        <a href="touchtyping.html" class="nav-link">Touch Typing</a>
+        <a href="AiTest.html" class="nav-link active">Quiz Maker</a>
+      </div>
+    </nav>
+  </header>
 
-            <button id="add-question-btn" style="background-color: #444; margin-bottom: 20px;">➕ Add Another Question</button>
-            <br>
-            
-            <button id="preview-test-btn" class="primary-btn" style="background-color: #ffaa00; margin-bottom: 15px;">👀 Preview Test (Offline)</button>
-            <button id="generate-link-btn" class="primary-btn">Generate Shareable Link</button>
-            
-            <div id="share-box" style="display: none; margin-top: 20px;">
-                <p>✅ Test Created! Send this link to your friends:</p>
-                <textarea id="share-link" readonly></textarea>
-                <p>Link will be valid for 24hrs</p>
-            </div>
+  <main class="quiz-container">
+    <!-- =========================================================================
+         CREATOR MODE: Quiz Builder
+         ========================================================================= -->
+    <div id="creator-mode" class="quiz-card glass-card">
+      <div class="creator-header-row">
+        <div>
+          <h1>Quick Quiz &amp; <span class="gradient-text">MCQ Maker</span></h1>
+          <p>Create, take, and share encrypted offline-ready tests</p>
         </div>
+        <a href="index.html" class="icon-btn" style="text-decoration:none;">&larr; Hub</a>
+      </div>
 
-        <div id="taker-mode" style="display: none;">
-            <h2 id="taker-title">Take the Test!</h2>
-            
-            <div id="test-questions-display">
-            </div>
-            
-            <button id="submit-answer-btn" class="primary-btn">Submit Test</button>
-            <p id="result-message"></p>
-            
-            <button id="back-to-editor-btn" style="display:none; margin-top: 15px; background-color: #ffaa00; color: black; font-weight: bold;">Back to Editor</button>
-            <button id="create-own-btn" style="display:none; margin-top: 15px;">Create Your Own Test</button>
+      <!-- Quick Starter Presets Bar -->
+      <div class="preset-topics-bar">
+        <span class="preset-label">⚡ Quick Presets:</span>
+        <button class="preset-chip" onclick="loadPreset('webdev')">🌐 Web Dev</button>
+        <button class="preset-chip" onclick="loadPreset('cs')">💻 Computer Science</button>
+        <button class="preset-chip" onclick="loadPreset('science')">🔬 Science &amp; Space</button>
+        <button class="preset-chip" onclick="loadPreset('trivia')">🎯 Trivia</button>
+        <button class="preset-chip secondary" onclick="resetToBlank()">📄 Blank</button>
+      </div>
+
+      <div class="quiz-meta-inputs">
+        <label for="quiz-title-input">Quiz Title:</label>
+        <input type="text" id="quiz-title-input" placeholder="e.g. Computer Science Midterm Quiz..."
+          value="Quick Knowledge Check">
+      </div>
+
+      <!-- Questions List Container -->
+      <div id="all-questions-container" class="questions-list">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Creator Actions -->
+      <div class="creator-actions-bar">
+        <button id="add-question-btn" class="btn-secondary">➕ Add Question</button>
+
+        <div class="primary-actions-group">
+          <button id="preview-test-btn" class="btn-warning">👀 Preview Test</button>
+          <button id="generate-link-btn" class="btn-primary">🔗 Share / Export Test</button>
         </div>
-    </main>
+      </div>
+
+      <!-- Share Box (Slide down) -->
+      <div id="share-box" class="share-box glass-card" style="display: none;">
+        <div class="share-box-header">
+          <h3>🎉 Test Created Successfully!</h3>
+          <button class="close-share-btn" onclick="$('#share-box').slideUp()">&times;</button>
+        </div>
+        <p>Your test payload is encoded into a direct self-contained link. Anyone with this link can take your test:</p>
+        <div class="share-input-wrap">
+          <textarea id="share-link" readonly></textarea>
+          <button id="copy-link-btn" class="btn-primary" style="margin-top: 8px;">📋 Copy Shareable Link</button>
+        </div>
+        <p class="share-hint">Everything is stored directly in the URL—no database, no account needed!</p>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         TAKER MODE: Test Taking Screen
+         ========================================================================= -->
+    <div id="taker-mode" class="quiz-card glass-card" style="display: none;">
+      <div class="taker-header-row">
+        <div>
+          <span class="exam-badge" id="exam-mode-badge">EXAM MODE</span>
+          <h2 id="taker-title">Take the Test!</h2>
+        </div>
+        <div class="taker-controls-right">
+          <button id="back-to-editor-btn" class="btn-secondary" style="display: none;">✎ Back to Editor</button>
+        </div>
+      </div>
+
+      <!-- Questions Render Target -->
+      <div id="test-questions-display" class="test-questions-display">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Submit & Results -->
+      <div class="taker-actions-bottom">
+        <button id="submit-answer-btn" class="btn-primary-large">✓ Submit Test for Grading</button>
+
+        <div id="result-message-container" class="result-message-card" style="display: none;">
+          <h3 id="result-headline">Grading Complete!</h3>
+          <div class="score-display-box" id="result-score-box"></div>
+          <p id="result-summary"></p>
+          <div class="post-test-actions">
+            <button id="retake-test-btn" class="btn-secondary">↺ Retake Test</button>
+            <button id="create-own-btn" class="btn-primary">➕ Create Your Own Test</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast">Copied to clipboard! ✨</div>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; FunTools MCQ Studio • Client-side Encrypted Quiz Links • Zero Server Tracking</p>
+    </div>
+  </footer>
 </body>
+
 </html>

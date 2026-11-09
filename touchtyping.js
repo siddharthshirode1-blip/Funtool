@@ -1,270 +1,386 @@
-$(document).ready(function(){
-    $("#customrange").hide();
-    
-    // ==== All tracking variables ====
-    let mistakes = 0;
-    let istyping = false;
-    let time = 0;
-    let timememory = null;
-    let totalRawMistakes = 0; 
-    let previousTextLength = 0; 
+/**
+ * FunTools - Touch Typing Trainer Engine
+ */
 
-const words = [
-        // --- Grammatical Words ---
-        "a", "an", "the", "and", "or", "but", "if", 
-        "of", "in", "to", "for", "with", "on", "at", "by", "from", 
-        "is", "it", "be", "as", "so", "we", "he", "she", "they", "you", 
-        "i", "that", "this", "are", "was", "were", "do", "not", "have",
+$(document).ready(function() {
+  // =========================================================================
+  // Game & Telemetry State
+  // =========================================================================
+  let mistakes = 0;
+  let istyping = false;
+  let time = 0;
+  let timerInterval = null;
+  let totalRawMistakes = 0;
+  let previousTextLength = 0;
+  let totalKeystrokes = 0;
+  let soundEnabled = true;
 
-        // --- Main Words ---
-        "apple", "animal", "always", "about", "again",
-        "brave", "build", "banana", "basic", "begin",
-        "catch", "clever", "cloud", "clean", "color",
-        "dance", "dream", "drive", "daily", "doubt",
-        "eagle", "every", "energy", "early", "empty",
-        "fast", "friend", "future", "false", "fresh",
-        "great", "green", "giant", "guess", "glass",
-        "happy", "house", "hero", "heavy", "heart",
-        "idea", "island", "inside", "image", "issue",
-        "jump", "joke", "juice", "joint", "judge",
-        "kite", "keep", "kind", "knock", "known",
-        "learn", "light", "lucky", "large", "level",
-        "magic", "music", "money", "month", "major",
-        "never", "night", "nature", "noise", "north",
-        "open", "ocean", "orange", "often", "order",
-        "peace", "power", "planet", "plant", "piece",
-        "quick", "quiet", "queen", "quite", "quote",
-        "river", "right", "round", "ready", "reach",
-        "smart", "smile", "space", "small", "sound",
-        "time", "train", "trust", "today", "thing",
-        "under", "uncle", "unique", "until", "usual",
-        "voice", "visit", "value", "valid", "video",
-        "water", "world", "wonder", "whole", "watch",
-        "xray", "xylophone", "xenon", "xerox", "xylem",
-        "yellow", "young", "year", "yield", "youth",
-        "zebra", "zero", "zone", "zeal", "zoom"
-    ];
+  // Finger placement mapping for the guide
+  const fingerMap = {
+    // Left hand
+    q: "Left Pinky", a: "Left Pinky", z: "Left Pinky", "1": "Left Pinky",
+    w: "Left Ring", s: "Left Ring", x: "Left Ring", "2": "Left Ring",
+    e: "Left Middle", d: "Left Middle", c: "Left Middle", "3": "Left Middle",
+    r: "Left Index", f: "Left Index (Home)", v: "Left Index", t: "Left Index", g: "Left Index", b: "Left Index", "4": "Left Index", "5": "Left Index",
+    // Right hand
+    y: "Right Index", h: "Right Index", n: "Right Index", u: "Right Index", j: "Right Index (Home)", m: "Right Index", "6": "Right Index", "7": "Right Index",
+    i: "Right Middle", k: "Right Middle", ",": "Right Middle", "8": "Right Middle",
+    o: "Right Ring", l: "Right Ring", ".": "Right Ring", "9": "Right Ring",
+    p: "Right Pinky", ";": "Right Pinky", "/": "Right Pinky", "-": "Right Pinky", "=": "Right Pinky", "[": "Right Pinky", "]": "Right Pinky", "0": "Right Pinky",
+    " ": "Thumb (Spacebar)"
+  };
 
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // Expanded Rich Vocabulary Pool
+  const words = [
+    // Core Connectors
+    "the", "be", "to", "of", "and", "a", "in", "that", "have", "i", "it", "for", "not", "on", "with",
+    "he", "as", "you", "do", "at", "this", "but", "his", "by", "from", "they", "we", "say", "her", "she",
+    "or", "an", "will", "my", "one", "all", "would", "there", "their", "what", "so", "up", "out", "if",
+    "about", "who", "get", "which", "go", "me", "when", "make", "can", "like", "time", "no", "just", "him",
 
-    function playClickSound() {
-        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.type = 'square'; 
-        oscillator.frequency.setValueAtTime(700, audioCtx.currentTime); 
-        gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime); 
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.015);
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.015);
+    // Technology & Coding
+    "code", "data", "web", "node", "loop", "byte", "stack", "react", "build", "cloud", "logic", "debug",
+    "cache", "query", "array", "string", "server", "system", "script", "cyber", "design", "stream", "packet",
+
+    // Action & Common Verbs
+    "learn", "write", "think", "create", "boost", "focus", "reach", "shine", "spark", "solve", "craft",
+    "expand", "rapid", "smooth", "master", "drive", "swift", "clever", "fluid", "sharp", "bright", "glance",
+
+    // Descriptive & Flow Words
+    "future", "energy", "motion", "forest", "galaxy", "planet", "nature", "rhythm", "signal", "vector",
+    "screen", "cursor", "zenith", "vertex", "matrix", "beacon", "voyage", "summit", "spirit", "simple"
+  ];
+
+  // =========================================================================
+  // Web Audio Click Synthesizer
+  // =========================================================================
+  let audioCtx = null;
+
+  function initAudio() {
+    if (!audioCtx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+  }
+
+  function playClickSound() {
+    if (!soundEnabled) return;
+    initAudio();
+
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = "sine";
+    // Varied subtle frequency for mechanical key click realism
+    osc.frequency.setValueAtTime(540 + Math.random() * 80, now);
+
+    gain.gain.setValueAtTime(0.04, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.02);
+  }
+
+  // Sound toggle button
+  $("#soundToggleBtn").click(function() {
+    soundEnabled = !soundEnabled;
+    $(this).text(soundEnabled ? "🔊 Sound: ON" : "🔈 Sound: OFF");
+  });
+
+  // =========================================================================
+  // Virtual Keyboard Generator
+  // =========================================================================
+  const keyboardLayout = [
+    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="],
+    ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"],
+    ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"],
+    ["z", "x", "c", "v", "b", "n", "m", ",", ".", "/"],
+    [" "]
+  ];
+
+  function renderVisualKeyboard() {
+    const $kb = $("#visualKeyboard");
+    $kb.empty();
+
+    keyboardLayout.forEach(row => {
+      const $rowDiv = $('<div class="keyboard-row"></div>');
+      row.forEach(char => {
+        const isSpace = char === " ";
+        const displayChar = isSpace ? "SPACEBAR" : char.toUpperCase();
+        const keyClass = isSpace ? "key space-key" : "key";
+        const $key = $(`<div class="${keyClass}" data-key="${char}">${displayChar}</div>`);
+        $rowDiv.append($key);
+      });
+      $kb.append($rowDiv);
+    });
+  }
+
+  renderVisualKeyboard();
+
+  function updateVisualTarget(targetChar) {
+    $(".key").removeClass("target-key");
+    if (!targetChar) return;
+
+    const lower = targetChar.toLowerCase();
+    const $targetKey = $(`.key[data-key="${lower}"]`);
+
+    if ($targetKey.length > 0) {
+      $targetKey.addClass("target-key");
     }
 
-    // ========================= LOADING MESSAGES =========================
-    function loadmessage() {
-        //==== Reset game values ====
-        clearInterval(timememory);
-        istyping = false;
-        time = 0;
-        mistakes = 0;
-        totalRawMistakes = 0; // Reset total typos
-        previousTextLength = 0; // Reset keystroke tracker
-        
-        $("#timer").text(time);
-        $("#mistakes").text(mistakes);
-        $("#wpm").text("0");
+    const tip = fingerMap[lower] || "Fingers centered on Home Row";
+    $("#fingerGuideTip").text(`Target: '${targetChar === " " ? "Space" : targetChar.toUpperCase()}' → ${tip}`);
+  }
 
-        // UI Resets
-        $("#resultsboard").slideUp(); // Hide the results board
-        $("#typingwords").removeClass("blur-effect"); // Remove the visual blur
+  // =========================================================================
+  // Message / Exercise Generator
+  // =========================================================================
+  function loadmessage() {
+    clearInterval(timerInterval);
+    istyping = false;
+    time = 0;
+    mistakes = 0;
+    totalRawMistakes = 0;
+    previousTextLength = 0;
+    totalKeystrokes = 0;
 
-        let messages = "";
-        let numbersOfwords = Number($("#wordrange").val());
-        if($("#wordrange").val() === "custom"){
-            numbersOfwords = Number($("#customrange").val());
-        }
+    $("#timer").text("0s");
+    $("#mistakes").text("0");
+    $("#wpm").html('0 <small>WPM</small>');
+    $("#accuracy").text("100%");
 
-        // ==== WordCount in Dashboard ====
-        $("#wordscount").text(numbersOfwords);
-        
-        for(let i = 1; i <= numbersOfwords; i++){
-            let randomWordIndex = Math.floor(Math.random() * words.length);
-            messages += (words[randomWordIndex] + " "); 
-        }
-        
-        $("#typingwords").empty();
-        messages = messages.trim();
+    $("#resultsboard").removeClass("show");
+    $("body").css("overflow", "");
 
-        messages.split("").forEach(char =>{
-            $("#typingwords").append(`<span data-char="${char}">${char}</span>`);
-        });
-
-        // === Animation & Unlock Box ===
-        $("#typingwords span").first().addClass("active");
-        $("#typinginput").prop("disabled", false).val("").focus(); // Fixed spelling!
+    let count = parseInt($("#wordrange").val()) || 25;
+    if ($("#wordrange").val() === "custom") {
+      count = parseInt($("#customrange").val()) || 30;
+      if (count < 5) count = 5;
+      if (count > 100) count = 100;
     }
 
+    let generatedWords = [];
+    for (let i = 0; i < count; i++) {
+      const rIdx = Math.floor(Math.random() * words.length);
+      generatedWords.push(words[rIdx]);
+    }
+
+    const fullText = generatedWords.join(" ");
+    const $wordsContainer = $("#typingwords");
+    $wordsContainer.empty();
+
+    for (let i = 0; i < fullText.length; i++) {
+      const char = fullText[i];
+      $wordsContainer.append(`<span data-char="${char}">${char}</span>`);
+    }
+
+    const $firstChar = $wordsContainer.find("span").first();
+    $firstChar.addClass("active");
+    updateVisualTarget($firstChar.attr("data-char"));
+
+    $("#typinginput").prop("disabled", false).val("").focus();
+  }
+
+  // Initial load
+  loadmessage();
+
+  // Focus redirection
+  $("#typingwordpad").click(function() {
+    $("#typinginput").focus();
+  });
+
+  // Mode Dropdown Listener
+  $("#wordrange").change(function() {
+    if ($(this).val() === "custom") {
+      $("#customrange").fadeIn(200).focus();
+    } else {
+      $("#customrange").hide();
+      loadmessage();
+    }
+  });
+
+  $("#customrange").on("change blur", function() {
     loadmessage();
+  });
 
-    // === Auto focus (MOVED OUTSIDE) ===
-    $("#typingwordpad").click(function(){
-        $("#typinginput").focus();
-    });
-    
-    // Play again button
-    $("#restartbtn").click(function(){
-        loadmessage();
-    });
+  $("#manualRestartBtn, #restartbtn").click(function() {
+    loadmessage();
+  });
 
-    // ======================== Range ========================
-    $("#wordrange").change(function(){
-        if($(this).val() === "custom"){
-            $("#customrange").show().focus();
-        } else {
-            $("#customrange").hide();
-            loadmessage();
-        }
-    });
+  // =========================================================================
+  // Typing Input Engine
+  // =========================================================================
+  $("#typinginput").on("input", function() {
+    playClickSound();
 
-    $("#customrange").on("change",function(){
-        if($(this).val() < 5) { $(this).val(5); }
-        else if($(this).val() > 100){ $(this).val(100); }
-        loadmessage();
-    });
-
-    //======================== OnTyping ===============================
-    $("#typinginput").on("input",function(){
-        playClickSound();
-
-        if(!istyping){
-            istyping = true;
-            timememory = setInterval(function(){
-                updateTimer();
-                updateWPM();
-            }, 1000);
-        }
-
-        let typedtext = $(this).val().split("");
-        let spans = $("#typingwords span");
-        
-        // --- 🚨 NEW: RAW MISTAKE TRACKER 🚨 ---
-        let currentLength = typedtext.length;
-        if (currentLength > previousTextLength) {
-            // User typed a NEW character (didn't hit backspace)
-            let lastCharIndex = currentLength - 1;
-            let typedChar = typedtext[lastCharIndex];
-            let expectedChar = spans.eq(lastCharIndex).text();
-            
-            // If the key they just hit doesn't match, log a raw typo!
-            if (typedChar !== expectedChar) {
-                totalRawMistakes++;
-            }
-        }
-        previousTextLength = currentLength; // Update memory for the next keystroke
-        // ---------------------------------------
-
-        spans.removeClass("correct incorrect active");
-        mistakes = 0;
-        
-        spans.each(function(index){
-            let typedchar = typedtext[index];
-            let expectedchar = $(this).attr("data-char");
-
-            if(typedchar ==  null){
-                $(this).text(expectedchar);
-                
-            } else if (typedchar === expectedchar){
-                $(this).text(expectedchar);
-                $(this).addClass("correct");
-            } else {
-                $(this).text(typedchar);
-                $(this).addClass("incorrect");
-
-                mistakes++; // This just counts the currently visible red letters
-            }
-        });
-
-        // ==== THE FINISH LINE ====
-        // ==== THE FINISH LINE ====
-        if(typedtext.length === spans.length){
-            clearInterval(timememory);
-            $("#typinginput").prop("disabled", true);
-            spans.removeClass("active");
-            $("#typingwords").addClass("blur-effect");
-            
-            updateWPM();
-            let currentWPM = parseInt($("#wpm").text());
-            let wordMode = $("#wordrange").val(); // Get the mode they just played
-
-            // 1. Load the basic stats
-            $("#res-time").text(time);
-            $("#res-wpm").text(currentWPM);
-            $("#res-mistakes").text(mistakes);
-            $("#res-totaltypos").text(totalRawMistakes);
-            $("#highscore-alert").hide(); // Hide the alert by default
-
-            // 2. High Score Logic! (Only run if it's NOT custom mode)
-            if (wordMode !== "custom") {
-                let storageKey = "highscore_" + wordMode; // e.g., highscore_10
-                let savedHighScore = localStorage.getItem(storageKey) || 0;
-                savedHighScore = parseInt(savedHighScore);
-
-                // Did they beat it?
-                if (currentWPM > savedHighScore) {
-                    localStorage.setItem(storageKey, currentWPM); // Save new score
-                    savedHighScore = currentWPM; // Update variable for display
-                    $("#highscore-alert").fadeIn(); // Trigger the celebration text!
-                }
-
-                // Show the scores on the board
-                $("#hs-category").text(wordMode);
-                $("#res-highscore").text(savedHighScore);
-                $("#res-highscore").parent().show(); // Make sure the line is visible
-
-            } else {
-                // If they played custom mode, hide the high score text entirely
-                $("#res-highscore").parent().hide(); 
-            }
-            
-            // 3. Show the board
-            $("#resultsboard").slideDown();
-            return;
-        }
-
-        let nextLetterIndex = typedtext.length;
-        spans.eq(nextLetterIndex).addClass("active");
-        $("#mistakes").text(mistakes);
-    });
-
-    // ==================== Timer & WPM ====================
-    function updateTimer(){
+    if (!istyping) {
+      istyping = true;
+      timerInterval = setInterval(() => {
         time++;
-        $("#timer").text(time);
+        $("#timer").text(`${time}s`);
+        updateWPMAndAccuracy();
+      }, 1000);
     }
 
-    function updateWPM(){
-        let totalTyped = $("#typinginput").val().length;
-        if(time > 0){
-            let currentWPM = Math.round((totalTyped / 5) / (time / 60));
-            if(currentWPM < 0 || !isFinite(currentWPM)){currentWPM = 0;}
-            $("#wpm").text(currentWPM);
-        }
+    const typedVal = $(this).val();
+    const typedArr = typedVal.split("");
+    const spans = $("#typingwords span");
+
+    // Keystroke tracking
+    totalKeystrokes++;
+    const currentLength = typedArr.length;
+    if (currentLength > previousTextLength) {
+      const lastTypedIdx = currentLength - 1;
+      const typedChar = typedArr[lastTypedIdx];
+      const expectedChar = spans.eq(lastTypedIdx).attr("data-char");
+
+      if (typedChar !== expectedChar) {
+        totalRawMistakes++;
+      }
+    }
+    previousTextLength = currentLength;
+
+    spans.removeClass("correct incorrect active");
+    mistakes = 0;
+
+    spans.each(function(index) {
+      const typedChar = typedArr[index];
+      const expectedChar = $(this).attr("data-char");
+
+      if (typedChar == null) {
+        $(this).text(expectedChar);
+      } else if (typedChar === expectedChar) {
+        $(this).text(expectedChar);
+        $(this).addClass("correct");
+      } else {
+        $(this).text(typedChar);
+        $(this).addClass("incorrect");
+        mistakes++;
+      }
+    });
+
+    $("#mistakes").text(mistakes);
+    updateWPMAndAccuracy();
+
+    // Check completion
+    if (typedVal.length >= spans.length) {
+      finishTest();
+      return;
     }
 
-    // ================= Cheetsheet PopUp ======================
-    $("#cheetsheeton").click(function(){
-        $(".cheetsheet").css("display","flex").hide().fadeIn(400);
-    });
+    // Move active cursor & highlight virtual keyboard
+    const nextIdx = typedVal.length;
+    const $nextSpan = spans.eq(nextIdx);
+    $nextSpan.addClass("active");
+    updateVisualTarget($nextSpan.attr("data-char"));
+  });
 
-    $("#cheetsheetoff").click(function(){
-        $(".cheetsheet").fadeOut(400);
-    });
+  function updateWPMAndAccuracy() {
+    const totalTyped = $("#typinginput").val().length;
+    let currentWPM = 0;
+    if (time > 0) {
+      currentWPM = Math.round((totalTyped / 5) / (time / 60));
+      if (!isFinite(currentWPM) || currentWPM < 0) currentWPM = 0;
+    }
+    $("#wpm").html(`${currentWPM} <small>WPM</small>`);
 
-    $(document).keydown(function(value){
-        if(value.key === "Enter"){
-            event.preventDefault();
-            loadmessage();
-        }
-    })
+    // Accuracy calculation
+    let accuracyPct = 100;
+    if (totalTyped > 0) {
+      const correctChars = Math.max(0, totalTyped - totalRawMistakes);
+      accuracyPct = Math.round((correctChars / totalTyped) * 100);
+      if (accuracyPct < 0) accuracyPct = 0;
+    }
+    $("#accuracy").text(`${accuracyPct}%`);
+  }
+
+  // =========================================================================
+  // Completion / Results Board
+  // =========================================================================
+  function finishTest() {
+    clearInterval(timerInterval);
+    $("#typinginput").prop("disabled", true);
+    $(".key").removeClass("target-key");
+    updateWPMAndAccuracy();
+
+    const finalWPM = parseInt($("#wpm").text()) || 0;
+    const finalAccuracy = $("#accuracy").text();
+    const mode = $("#wordrange").val();
+
+    $("#res-time").text(time);
+    $("#res-wpm").text(finalWPM);
+    $("#res-accuracy").text(finalAccuracy);
+    $("#res-totaltypos").text(totalRawMistakes);
+
+    // Performance Tier Badge
+    const $badge = $("#performanceBadge");
+    if (finalWPM >= 100) {
+      $badge.text("GODLIKE TYPIST ⚡");
+    } else if (finalWPM >= 70) {
+      $badge.text("MASTER TYPIST 🚀");
+    } else if (finalWPM >= 45) {
+      $badge.text("PRO TYPIST ✨");
+    } else if (finalWPM >= 25) {
+      $badge.text("INTERMEDIATE 🌱");
+    } else {
+      $badge.text("BEGINNER 🎯");
+    }
+
+    // High Score tracking
+    if (mode !== "custom") {
+      const storageKey = "funtools_typing_hs_" + mode;
+      let savedHS = parseInt(localStorage.getItem(storageKey) || 0);
+
+      if (finalWPM > savedHS) {
+        localStorage.setItem(storageKey, finalWPM);
+        savedHS = finalWPM;
+        $("#highscore-alert").fadeIn(300);
+      } else {
+        $("#highscore-alert").hide();
+      }
+
+      $("#hs-category").text(mode);
+      $("#res-highscore").text(`${savedHS} WPM`);
+      $("#highScoreRow").show();
+    } else {
+      $("#highScoreRow").hide();
+      $("#highscore-alert").hide();
+    }
+
+    $("#resultsboard").addClass("show");
+  }
+
+  // =========================================================================
+  // Technique Modal
+  // =========================================================================
+  $("#cheetsheeton").click(function() {
+    $(".cheatsheet").addClass("show");
+  });
+
+  $("#cheetsheetoff, #guideGotItBtn").click(function() {
+    $(".cheatsheet").removeClass("show");
+    $("#typinginput").focus();
+  });
+
+  $(".cheatsheet").click(function(e) {
+    if ($(e.target).is(".cheatsheet")) {
+      $(".cheatsheet").removeClass("show");
+      $("#typinginput").focus();
+    }
+  });
+
+  // Global keydown: Fix the critical bug where 'event' was referenced improperly
+  $(document).keydown(function(e) {
+    if (e.key === "Tab" || (e.key === "Enter" && $("#resultsboard").hasClass("show"))) {
+      e.preventDefault();
+      loadmessage();
+    }
+  });
 });

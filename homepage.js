@@ -1,61 +1,89 @@
-$(document).ready(function(){
-    $(".card").mouseenter(function(){
+/**
+ * FunTools - Homepage Controller
+ */
+$(document).ready(function() {
+  // =========================================================================
+  // Live Preview Box Dynamic Updates
+  // =========================================================================
+  const $previewBox = $("#previewBox");
+  const $cardImg = $("#cardimg");
+  const $previewTitle = $("#previewTitle");
+  const $previewDesc = $("#previewDesc");
+  const $previewTags = $("#previewTags");
+  const $previewLaunchBtn = $("#previewLaunchBtn");
+  const $cards = $(".card");
 
-        let hoverdata = $(this).attr("data-info");
-        let hoverimg = $(this).attr("data-img");
-        
-        $("#cardimg").css({
-            "background-image": "url('" + hoverimg + "')"
-        })
+  function updatePreview($card) {
+    if (!$card || $card.length === 0) return;
 
-        $("#cardinfo").html(hoverdata)
-    });
+    const title = $card.data("title") || $card.find("h3").text();
+    const info = $card.data("info") || $card.find("p").text();
+    const img = $card.data("img");
+    const link = $card.data("link") || $card.attr("href");
+    const tags = ($card.data("tags") || "").split(",").filter(Boolean);
 
-    // $("#card2").mouseenter(function(){
-    //     $("#cardimg").css({
-    //         "background-image": "url('/')"
-    //     })
-    //     $("#cardinfo").html("    ")
-    // })
+    // Apply smooth fade
+    $cardImg.css("opacity", "0.6");
+    $previewTitle.css("opacity", "0.6");
 
-    // $("#card3").mouseenter(function(){
-    //     $("#cardimg").css({
-    //         "background-image": "url('/')"
-    //     })
-    //     $("#cardinfo").html("")
-    // })
+    setTimeout(() => {
+      if (img) {
+        $cardImg.css("background-image", `url('${img}')`);
+      }
+      $previewTitle.text(title);
+      $previewDesc.text(info);
+      $previewLaunchBtn.attr("href", link);
 
-    // let panel = document.getElementById("aboutpanel");
+      $previewTags.empty();
+      tags.forEach(tag => {
+        $previewTags.append(`<span class="tag">${tag.trim()}</span>`);
+      });
 
-    // let aboutbtn = document.getElementById("about");
+      $cardImg.css("opacity", "1");
+      $previewTitle.css("opacity", "1");
+    }, 120);
+  }
 
-    // aboutbtn.addEventListener("click",function(){
+  // Set default initial preview to the first card
+  if ($cards.length > 0) {
+    updatePreview($cards.first());
+  }
 
-    //     panel.classList.add("show");
-    // });
-    $("#about").click(function(event){
-        event.preventDefault();
-        $("#aboutpanel").addClass("show");
-    });
+  // Hover and focus listener for cards
+  $cards.on("mouseenter focusin", function() {
+    updatePreview($(this));
+  });
 
-    // let aclosebtn = document.getElementById("closebtn");
-    // aclosebtn.onclick = function(){
-    //     panel.classList.remove("show");
-    // }
-    $("#closebtn").click(function(){
-        $("#aboutpanel").removeClass("show");
-    });
-})
+  // =========================================================================
+  // About Modal Panel
+  // =========================================================================
+  const $aboutPanel = $("#aboutpanel");
 
+  function openAboutModal(e) {
+    if (e) e.preventDefault();
+    $aboutPanel.addClass("show");
+    $("body").css("overflow", "hidden");
+  }
 
-// let aboutBtn = document.getElementById("about");
-// let panel = document.getElementById("aboutpanel");
-// let closeBtn = document.getElementById("closebtn");
+  function closeAboutModal() {
+    $aboutPanel.removeClass("show");
+    $("body").css("overflow", "");
+  }
 
-// aboutBtn.onclick = function(){
-//   panel.classList.add("show");
-// }
+  $("#about").on("click", openAboutModal);
+  $("#closebtn, #closebtn-action").on("click", closeAboutModal);
 
-// closeBtn.onclick = function(){
-//   panel.classList.remove("show");
-// }
+  // Close when clicking outside content
+  $aboutPanel.on("click", function(e) {
+    if ($(e.target).is("#aboutpanel")) {
+      closeAboutModal();
+    }
+  });
+
+  // Close on Escape key
+  $(document).on("keydown", function(e) {
+    if (e.key === "Escape" && $aboutPanel.hasClass("show")) {
+      closeAboutModal();
+    }
+  });
+});
