@@ -46,6 +46,9 @@
 
 ## 🚀 Getting Started
 
+Click on the Link : funtools-hub.netlify.app
+you will be directly send to the web
+
 Simply open `index.html` in any modern web browser:
 
 ```bash
